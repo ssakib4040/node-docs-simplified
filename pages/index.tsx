@@ -21,7 +21,7 @@ interface HomeProps {
 }
 
 export default function Home({ modules }: HomeProps) {
-  // console.log("modules", modules);
+  // console.log("transformedData", transformedData);
   return (
     <div className="container py-4">
       <Head>
@@ -50,7 +50,17 @@ export const getStaticProps: GetStaticProps = async () => {
   const json = JSON.parse(fileContent);
   const modules: Module[] = json.modules;
 
+  const transformedData = json.modules.map((mod: Module) => {
+    console.log("mod", mod);
+    const { name, textRaw } = mod;
+
+    return {
+      textRaw: textRaw,
+      name: name,
+    };
+  });
+
   return {
-    props: { modules },
+    props: { modules: transformedData },
   };
 };
