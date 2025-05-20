@@ -4,7 +4,6 @@ import fs from "fs";
 import path from "path";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 interface Method {
   name: string;
@@ -14,7 +13,7 @@ interface Method {
 
 interface ModulePageProps {
   data: {
-    name: string;
+    textRaw?: string;
     desc?: string;
     methods?: Method[];
     classes?: any[];
@@ -23,13 +22,15 @@ interface ModulePageProps {
   };
 }
 
-export default function ModulePage({ data }: ModulePageProps) {
+export default function ModulePage({ data, tempData }: ModulePageProps) {
   const router = useRouter();
+
+  console.log("tempData", tempData);
 
   return (
     <div className="container py-5">
       <Head>
-        <title>{data.name} | Node.js Docs</title>
+        <title>{data.textRaw} | Node.js Docs</title>
       </Head>
       <button
         className="btn btn-outline-secondary mb-4"
@@ -39,7 +40,7 @@ export default function ModulePage({ data }: ModulePageProps) {
       </button>
 
       <div className="mb-4">
-        <h2 className="mb-2">{data.name}</h2>
+        <h2 className="mb-2">{data.textRaw}</h2>
         <p className="text-muted">
           {data.desc
             ? data.desc.replace(/<[^>]*>?/gm, "")
@@ -104,7 +105,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const json = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const data = json.modules.find((m: any) => m.name === params?.name);
 
+  const transformedData = {
+    textRaw: data.textRaw,
+    desc: data.desc || "",
+  };
+
   return {
-    props: { data },
+    props: { data: transformedData, tempData: data },
   };
 };
