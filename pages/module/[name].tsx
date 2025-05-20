@@ -13,7 +13,7 @@ interface Method {
 }
 
 interface ModulePageProps {
-  module: {
+  data: {
     name: string;
     desc?: string;
     methods?: Method[];
@@ -23,13 +23,13 @@ interface ModulePageProps {
   };
 }
 
-export default function ModulePage({ module }: ModulePageProps) {
+export default function ModulePage({ data }: ModulePageProps) {
   const router = useRouter();
 
   return (
     <div className="container py-5">
       <Head>
-        <title>{module.name} | Node.js Docs</title>
+        <title>{data.name} | Node.js Docs</title>
       </Head>
       <button
         className="btn btn-outline-secondary mb-4"
@@ -39,19 +39,19 @@ export default function ModulePage({ module }: ModulePageProps) {
       </button>
 
       <div className="mb-4">
-        <h2 className="mb-2">{module.name}</h2>
+        <h2 className="mb-2">{data.name}</h2>
         <p className="text-muted">
-          {module.desc
-            ? module.desc.replace(/<[^>]*>?/gm, "")
+          {data.desc
+            ? data.desc.replace(/<[^>]*>?/gm, "")
             : "No description available."}
         </p>
       </div>
 
-      {module.methods && module.methods.length > 0 && (
+      {data.methods && data.methods.length > 0 && (
         <div className="mb-5">
           <h4 className="mb-3">Methods</h4>
           <div className="accordion" id="methodsAccordion">
-            {module.methods.map((method, idx) => (
+            {data.methods.map((method, idx) => (
               <div className="accordion-item" key={idx}>
                 <h2 className="accordion-header" id={`heading${idx}`}>
                   <button
@@ -102,9 +102,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const filePath = path.join(process.cwd(), "all.json");
   const json = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  const module = json.modules.find((m: any) => m.name === params?.name);
+  const data = json.modules.find((m: any) => m.name === params?.name);
 
   return {
-    props: { module },
+    props: { data },
   };
 };

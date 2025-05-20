@@ -18,16 +18,10 @@ interface Module {
 
 interface HomeProps {
   modules: Module[];
-  json: {
-    modules: Module[];
-    classes: any[];
-    properties: any[];
-    events: any[];
-  };
 }
 
-export default function Home({ modules, json }: HomeProps) {
-  console.log("modules", modules);
+export default function Home({ modules }: HomeProps) {
+  // console.log("modules", modules);
   return (
     <div className="container py-4">
       <Head>
@@ -36,9 +30,8 @@ export default function Home({ modules, json }: HomeProps) {
       <h1 className="mb-4">Node.js API Documentation</h1>
       <ul>
         {modules.map((mod) => (
-          <li>
+          <li key={mod.name}>
             <Link
-              key={mod.name}
               href={`/module/${mod.name}`}
               className="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover"
             >
@@ -58,6 +51,6 @@ export const getStaticProps: GetStaticProps = async () => {
   const modules: Module[] = json.modules;
 
   return {
-    props: { modules, json },
+    props: { modules },
   };
 };
