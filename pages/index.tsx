@@ -48,10 +48,8 @@ export const getStaticProps: GetStaticProps = async () => {
   const filePath = path.join(process.cwd(), "all.json");
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const json = JSON.parse(fileContent);
-  const modules: Module[] = json.modules;
 
   const transformedData = json.modules.map((mod: Module) => {
-    console.log("mod", mod);
     const { name, textRaw } = mod;
 
     return {
